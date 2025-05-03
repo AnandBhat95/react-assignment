@@ -50,10 +50,14 @@ const AreaMeals = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <Title order={2} mb="lg"  align="center">
+      <Title order={2} mb="lg" align="center">
         {areaName} Meals
       </Title>
-      <SimpleGrid cols={4} spacing="lg">
+      <SimpleGrid cols={4} spacing="lg" breakpoints={[
+        { maxWidth: 1200, cols: 3 },
+        { maxWidth: 900, cols: 2 },
+        { maxWidth: 600, cols: 1 },
+      ]}>
         {meals?.map((meal: any) => (
           <Card
             key={meal.idMeal}
@@ -81,34 +85,34 @@ const AreaMeals = () => {
         size="lg"
         overlayProps={{ blur: 3 }}
         styles={{
-            root: {
-              padding: '20px',  
-              borderRadius: '10px',  
-              backgroundColor: '#fff',  
-              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',  
+          root: {
+            padding: '20px',
+            borderRadius: '10px',
+            backgroundColor: '#fff',
+            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+          },
+          content: {
+            marginTop: '20px',
+          },
+          title: {
+            fontSize: '1.5rem',
+            fontWeight: 'bold',
+            color: '#1565c0',
+            textAlign: 'center',
+            marginBottom: '20px',
+          },
+          body: {
+            padding: '10px 20px',
+            marginBottom: '20px'
+          },
+          close: {
+            color: '#1565c0',
+            borderColor: '#1565c0',
+            '&:hover': {
+              backgroundColor: '#e3f2fd',
             },
-            content:{
-              marginTop: '20px', 
-            },
-            title: {
-              fontSize: '1.5rem',  
-              fontWeight: 'bold',  
-              color: '#1565c0',  
-              textAlign: 'center',  
-              marginBottom: '20px', 
-            },
-            body: {
-              padding: '10px 20px',  
-              marginBottom:'20px'
-            },
-            close: {
-              color: '#1565c0',  
-              borderColor: '#1565c0',  
-              '&:hover': {
-                backgroundColor: '#e3f2fd',  
-              },
-            },
-          }}
+          },
+        }}
       >
         {loadingMeal ? (
           <Center>
@@ -127,10 +131,10 @@ const AreaMeals = () => {
               {mealDetails.strMeal}
             </Text>
             <Text mt="md" style={{ lineHeight: '1.6', color: '#555' }}>{mealDetails.strInstructions}</Text>
-            <Button variant="outline" mt="md" onClick={closeMealDetailsModal}  style={{
-                borderColor: '#1565c0', 
-                color: '#1565c0',  
-              }}>
+            <Button variant="outline" mt="md" onClick={closeMealDetailsModal} style={{
+              borderColor: '#1565c0',
+              color: '#1565c0',
+            }}>
               Close
             </Button>
           </div>

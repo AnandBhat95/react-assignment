@@ -15,32 +15,32 @@ const fetchMealsByCategory = async (category: string) => {
 const fetchMealDetails = async (mealName: string) => {
   const res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`);
   const data = await res.json();
-  return data.meals[0]; 
+  return data.meals[0];
 };
 
 const CategoryMeals = () => {
   const { categoryName } = useParams<{ categoryName: string }>();
   const navigate = useNavigate();
 
-  
+
   const isLoggedIn = useAppStore((state) => state.isLoggedIn);
   const setLoggedIn = useAppStore((state) => state.setLoggedIn);
   const setRedirectUrl = useAppStore((state) => state.setRedirectUrl);
   const redirectUrl = useAppStore((state) => state.redirectUrl);
 
-  
+
   const [openModal, setOpenModal] = useState(false);
   const [mealDetails, setMealDetails] = useState<any>(null);
 
-  
+
   useEffect(() => {
     if (!isLoggedIn) {
-      setRedirectUrl(`/categories/${categoryName}`);  
+      setRedirectUrl(`/categories/${categoryName}`);
       setOpenModal(true);
     }
   }, [isLoggedIn, categoryName, setRedirectUrl]);
 
-  
+
   const { data: meals, isLoading } = useQuery(['meals', categoryName], () =>
     fetchMealsByCategory(categoryName!)
   );
@@ -50,24 +50,24 @@ const CategoryMeals = () => {
     return <Center><Loader size="lg" /></Center>;
   }
 
-  
+
   const handleLoginRedirect = () => {
-    navigate('/login');  
+    navigate('/login');
   };
 
-  
+
   const closeModal = () => {
     setOpenModal(false);
-    navigate(-1);  
+    navigate(-1);
   };
 
-  
+
   const handleSuccessfulLogin = () => {
-    setLoggedIn(true);  
+    setLoggedIn(true);
     if (redirectUrl) {
-      navigate(redirectUrl);  
+      navigate(redirectUrl);
     } else {
-      navigate('/categories');  
+      navigate('/categories');
     }
   };
 
@@ -75,10 +75,10 @@ const CategoryMeals = () => {
   const handleMealClick = async (mealName: string) => {
     const details = await fetchMealDetails(mealName);
     setMealDetails(details);
-    setOpenModal(true); 
+    setOpenModal(true);
   };
 
-  
+
   const closeMealDetailsModal = () => {
     setMealDetails(null);
     setOpenModal(false);
@@ -87,16 +87,20 @@ const CategoryMeals = () => {
   return (
     <div style={{ padding: 20 }}>
       {!isLoggedIn && (
-        <Modal styles={{content:{ marginTop: '20px', }}} opened={openModal} onClose={closeModal} title="Please Log In">
-        <Text mb="md">You need to log in to view the details of this category.</Text>
-        <Button onClick={handleLoginRedirect}>Go to Login</Button>
-      </Modal>
+        <Modal styles={{ content: { marginTop: '20px', } }} opened={openModal} onClose={closeModal} title="Please Log In">
+          <Text mb="md">You need to log in to view the details of this category.</Text>
+          <Button onClick={handleLoginRedirect}>Go to Login</Button>
+        </Modal>
       )}
-      
+
       {isLoggedIn && (
         <div>
-          <Title order={2}  align="center" mb="lg">{categoryName} Meals</Title>
-          <SimpleGrid cols={4} spacing="lg">
+          <Title order={2} align="center" mb="lg">{categoryName} Meals</Title>
+          <SimpleGrid cols={4} spacing="lg" breakpoints={[
+            { maxWidth: 1200, cols: 3 },
+            { maxWidth: 900, cols: 2 },
+            { maxWidth: 600, cols: 1 },
+          ]}>
             {meals?.map((meal: any) => (
               <Card
                 key={meal.idMeal}
@@ -104,7 +108,7 @@ const CategoryMeals = () => {
                 padding="lg"
                 radius="md"
                 withBorder
-                onClick={() => handleMealClick(meal.strMeal)}  
+                onClick={() => handleMealClick(meal.strMeal)}
                 style={{ cursor: 'pointer' }}
               >
                 <Card.Section>
@@ -121,7 +125,7 @@ const CategoryMeals = () => {
         opened={Boolean(mealDetails)}
         onClose={closeMealDetailsModal}
         title={mealDetails?.strMeal || "Meal Details"}
-        size="lg" 
+        size="lg"
         styles={{
           root: {
             padding: '20px',  // Add padding inside the modal
@@ -137,16 +141,16 @@ const CategoryMeals = () => {
             marginBottom: '20px',  // Add some margin below the title
           },
           content: {
-            marginTop: '20px', 
+            marginTop: '20px',
           },
           body: {
-            padding: '30px 20px',  
+            padding: '30px 20px',
           },
           close: {
-            color: '#1565c0',  
-            borderColor: '#1565c0',  
+            color: '#1565c0',
+            borderColor: '#1565c0',
             '&:hover': {
-              backgroundColor: '#e3f2fd',  
+              backgroundColor: '#e3f2fd',
             },
           },
         }}
@@ -158,7 +162,7 @@ const CategoryMeals = () => {
               alt={mealDetails.strMeal}
               height={200}
               mb="md"
-              style={{ borderRadius: '8px' }}  
+              style={{ borderRadius: '8px' }}
             />
             <Text weight={500} size="lg" mb="md">{mealDetails.strMeal}</Text>
             <Text mt="md" style={{ lineHeight: '1.6', color: '#555' }}>{mealDetails.strInstructions}</Text>
@@ -167,8 +171,8 @@ const CategoryMeals = () => {
               mt="md"
               onClick={closeMealDetailsModal}
               style={{
-                borderColor: '#1565c0',  
-                color: '#1565c0', 
+                borderColor: '#1565c0',
+                color: '#1565c0',
 
               }}
             >

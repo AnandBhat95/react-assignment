@@ -44,7 +44,6 @@ import {
   
     return (
       <Container size="xl" p="md" style={{ position: 'relative' }}>
-        <LoadingOverlay visible={loading} overlayBlur={2} />
         <Title align="center" mb="lg">
           Food Categories
         </Title>

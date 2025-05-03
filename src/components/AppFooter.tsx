@@ -20,7 +20,7 @@ const AppFooter = () => {
       }}
     >
       <Text size="sm" color="dimmed">
-        © 2025 MyFoodApp
+        © 2025 MyFoodApp - Anand
       </Text>
     </Footer>
   );

@@ -11,6 +11,8 @@ import CategoryMeals from './pages/CategoryMeals';
 import Login from './pages/Login';
 import PrivateRoute from './components/PrivateRoute';  // Import the PrivateRoute component
 import AreaMeals from './pages/AreaMeals';
+import Game from './pages/Game';
+import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,7 +39,7 @@ const routes = [
       },
       {
         path: '/login',
-        element: <Login />,  // Login route
+        element: <Login />, 
       },
       {
         path: '/categories/:categoryName',
@@ -45,8 +47,17 @@ const routes = [
       },
       {
         path: '/areas/:areaName',
-        element:   <AreaMeals />
+        element:( <PrivateRoute><AreaMeals /></PrivateRoute>)
       },
+      {
+        path: 'game',
+        element: (
+          <PrivateRoute>
+            <Game />
+          </PrivateRoute>
+        ),      
+      },
+      { path: '*', element: <NotFound /> },
     ],
   },
 ];

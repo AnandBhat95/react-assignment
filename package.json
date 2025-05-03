@@ -1,11 +1,14 @@
 {
+	"homepage": "https://anandbhat95.github.io/react-assignment",
 	"name": "@scriptassist/interview",
 	"private": true,
 	"version": "0.0.0",
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"predeploy": "npm run build",
+		"deploy": "gh-pages -d build" 
 	},
 	"dependencies": {
 		"@emotion/react": "^11.11.1",

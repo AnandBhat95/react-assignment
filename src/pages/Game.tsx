@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useRef} from 'react';
 import { Container, Title, Image, TextInput, Button, Text, Card } from '@mantine/core';
 type Meal = {
     strMeal: string;
@@ -9,7 +9,12 @@ const Game = () => {
     const [meal, setMeal] = useState<Meal | null>(null);
   const [guess, setGuess] = useState('');
   const [result, setResult] = useState('');
-
+  const playAgainRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (result && playAgainRef?.current) {
+      playAgainRef?.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [result]);
   const fetchRandomMeal = async () => {
     const res = await fetch('https://www.themealdb.com/api/json/v1/1/random.php');
     const data = await res.json();
@@ -34,8 +39,8 @@ const Game = () => {
   };
 
   return (
-    <Container size="xs" style={{ textAlign: 'center', paddingTop: '80px' }}>
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Container size="xs" style={{ textAlign: 'center', paddingTop: '70px', paddingBottom: '20px' }}>
+      <Card shadow="sm" padding="lg" radius="md" withBorder  style={{ height:'85vh', overflow:'auto' }}>
         <Title order={3} mb="sm">Guess the Food!</Title>
         {meal && (
           <>
@@ -46,7 +51,7 @@ const Game = () => {
               onChange={(e) => setGuess(e.currentTarget.value)}
               mb="md"
             />
-            <Button onClick={checkGuess} fullWidth>Submit Guess</Button>
+            <Button onClick={checkGuess} fullWidth ref={playAgainRef}>Submit Guess</Button>
             <Text mt="md">{result}</Text>
             {result && (
               <Button mt="sm" variant="light" onClick={fetchRandomMeal}>

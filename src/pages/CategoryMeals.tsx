@@ -71,15 +71,14 @@ const CategoryMeals = () => {
     }
   };
 
-  // Handle click on a meal item
+
   const handleMealClick = async (mealName: string) => {
-    // Fetch full meal details when a meal item is clicked
     const details = await fetchMealDetails(mealName);
     setMealDetails(details);
-    setOpenModal(true); // Open the modal to show details
+    setOpenModal(true); 
   };
 
-  // Modal close function
+  
   const closeMealDetailsModal = () => {
     setMealDetails(null);
     setOpenModal(false);
@@ -176,9 +175,7 @@ const CategoryMeals = () => {
               Close
             </Button>
           </div>
-        ) : (
-          <Loader size="lg" />
-        )}
+        ) : ''}
       </Modal>
 
 

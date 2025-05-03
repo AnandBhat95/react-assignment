@@ -99,6 +99,7 @@ const AreaMeals = () => {
             },
             body: {
               padding: '10px 20px',  
+              marginBottom:'20px'
             },
             close: {
               color: '#1565c0',  

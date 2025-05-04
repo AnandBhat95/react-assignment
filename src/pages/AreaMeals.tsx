@@ -12,6 +12,8 @@ import {
   Button,
 } from '@mantine/core';
 import { useState } from 'react';
+import { TextInput, ActionIcon } from '@mantine/core';
+import { IconX } from '@tabler/icons-react';
 
 const fetchMealsByArea = async (area: string) => {
   const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`);
@@ -23,6 +25,8 @@ const AreaMeals = () => {
   const { areaName } = useParams<{ areaName: string }>();
   const [mealDetails, setMealDetails] = useState<any>(null);
   const [loadingMeal, setLoadingMeal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   // Fetch meals 
   const { data: meals, isLoading } = useQuery(['meals-by-area', areaName], () =>
@@ -37,7 +41,9 @@ const AreaMeals = () => {
     setMealDetails(data.meals?.[0]);
     setLoadingMeal(false);
   };
-
+  const filteredMeals = meals?.filter((meal: any) =>
+    meal.strMeal.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const closeMealDetailsModal = () => setMealDetails(null);
 
   if (isLoading) {
@@ -53,12 +59,31 @@ const AreaMeals = () => {
       <Title order={2} mb="lg" align="center">
         {areaName} Meals
       </Title>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+        <TextInput
+          placeholder={`Search in ${areaName}`}
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.currentTarget.value)}
+          style={{ width: '30vw' }}
+          rightSection={
+            searchTerm ? (
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                onClick={() => setSearchTerm('')}
+              >
+                <IconX size={16} />
+              </ActionIcon>
+            ) : null
+          }
+        />
+      </div>
       <SimpleGrid cols={4} spacing="lg" breakpoints={[
         { maxWidth: 1200, cols: 3 },
         { maxWidth: 900, cols: 2 },
         { maxWidth: 600, cols: 1 },
       ]}>
-        {meals?.map((meal: any) => (
+        {filteredMeals.length > 0 ? (filteredMeals?.map((meal: any) => (
           <Card
             key={meal.idMeal}
             shadow="sm"
@@ -75,7 +100,13 @@ const AreaMeals = () => {
               {meal.strMeal}
             </Text>
           </Card>
-        ))}
+        ))):(
+          <Center style={{ gridColumn: '1 / -1' }}>
+            <Text color="#1565c0" weight={500}>
+              No meals found in {areaName}
+            </Text>
+          </Center>
+        )}
       </SimpleGrid>
 
       <Modal

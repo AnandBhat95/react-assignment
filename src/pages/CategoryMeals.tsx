@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { SimpleGrid, Card, Image, Text, Loader, Title, Center, Modal, Button } from '@mantine/core';
 import { useAppStore } from '../store/app.store'; // Import Zustand store
 import { useEffect, useState } from 'react';
+import { TextInput } from '@mantine/core';
+
 
 
 const fetchMealsByCategory = async (category: string) => {
@@ -31,6 +33,7 @@ const CategoryMeals = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [mealDetails, setMealDetails] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   useEffect(() => {
@@ -45,6 +48,9 @@ const CategoryMeals = () => {
     fetchMealsByCategory(categoryName!)
   );
 
+  const filteredMeals = meals?.filter((meal: any) =>
+    meal.strMeal.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (isLoading) {
     return <Center><Loader size="lg" /></Center>;
@@ -96,27 +102,43 @@ const CategoryMeals = () => {
       {isLoggedIn && (
         <div>
           <Title order={2} align="center" mb="lg">{categoryName} Meals</Title>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+            <TextInput
+              placeholder={`Search in ${categoryName}`}
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.currentTarget.value)}
+              style={{ width: '30vw' }}
+            />
+          </div>
           <SimpleGrid cols={4} spacing="lg" breakpoints={[
             { maxWidth: 1200, cols: 3 },
             { maxWidth: 900, cols: 2 },
             { maxWidth: 600, cols: 1 },
           ]}>
-            {meals?.map((meal: any) => (
-              <Card
-                key={meal.idMeal}
-                shadow="sm"
-                padding="lg"
-                radius="md"
-                withBorder
-                onClick={() => handleMealClick(meal.strMeal)}
-                style={{ cursor: 'pointer' }}
-              >
-                <Card.Section>
-                  <Image src={meal.strMealThumb} alt={meal.strMeal} height={160} />
-                </Card.Section>
-                <Text weight={500} mt="md">{meal.strMeal}</Text>
-              </Card>
-            ))}
+            {filteredMeals.length > 0 ? (filteredMeals
+              ?.map((meal: any) => (
+                <Card
+                  key={meal.idMeal}
+                  shadow="sm"
+                  padding="lg"
+                  radius="md"
+                  withBorder
+                  onClick={() => handleMealClick(meal.strMeal)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <Card.Section>
+                    <Image src={meal.strMealThumb} alt={meal.strMeal} height={160} />
+                  </Card.Section>
+                  <Text weight={500} mt="md">{meal.strMeal}</Text>
+                </Card>
+              ))):(
+                <Center style={{ gridColumn: '1 / -1' }}>
+                  <Text color="#1565c0" weight={500}>
+                    No meals found in {categoryName}
+                  </Text>
+                </Center>
+              )}
+
           </SimpleGrid>
         </div>
       )}
